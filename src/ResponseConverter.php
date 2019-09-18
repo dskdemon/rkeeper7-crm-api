@@ -31,6 +31,49 @@ class ResponseConverter implements ResponseConverterInterface
             throw new CantReadResponseException('Error parsing xml response');
         }
 
-        return $xml;
+        return $this->xmlToArray($xml);
+    }
+
+    /**
+     * @param SimpleXMLElement $xml
+     * @return array
+     */
+    protected function xmlToArray(\SimpleXMLElement $xml): array
+    {
+      $parser = function (\SimpleXMLElement $xml, array $collection = []) use (&$parser) {
+        $nodes = $xml->children();
+        $attributes = $xml->attributes();
+
+        if (0 !== count($attributes)) {
+          foreach ($attributes as $attrName => $attrValue) {
+            $collection['attributes'][$attrName] = strval($attrValue);
+          }
+        }
+
+        if (0 === $nodes->count()) {
+          $collection['value'] = strval($xml);
+          return $collection;
+        }
+
+        foreach ($nodes as $nodeName => $nodeValue) {
+          if (count($nodeValue->xpath('../' . $nodeName)) < 2) {
+            $collection[$nodeName] = $parser($nodeValue);
+            continue;
+          }
+
+          $collection[$nodeName][] = $parser($nodeValue);
+        }
+
+        return $collection;
+      };
+
+      return [
+        $xml->getName() => $parser($xml)
+      ];
+    }
+
+    public function is_assoc($var)
+    {
+      return is_array($var) && array_diff_key($var,array_keys(array_keys($var)));
     }
 }
