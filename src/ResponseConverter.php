@@ -23,7 +23,7 @@ class ResponseConverter implements ResponseConverterInterface
    * @return mixed|\Nutnet\RKeeper7Api\Contracts\SimpleXMLElement|\SimpleXMLElement
    * @throws \Nutnet\RKeeper7Api\Exceptions\CantReadResponseException
    */
-    public function convert(Response $response)
+    public function convert(Response $response, $as_array = true)
     {
         @$xml = simplexml_load_string($response->getBody()->getContents());
 
@@ -31,7 +31,7 @@ class ResponseConverter implements ResponseConverterInterface
             throw new CantReadResponseException('Error parsing xml response');
         }
 
-        return $this->xmlToArray($xml);
+        return ($as_array) ? $this->xmlToArray($xml) : $xml;
     }
 
     /**
