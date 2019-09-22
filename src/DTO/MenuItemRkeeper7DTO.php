@@ -5,8 +5,7 @@ namespace Nutnet\RKeeper7Api\DTO;
 use Nutnet\RKeeper7Api\Contracts\MenuItemRkeeper7DTO as MenuItemRkeeper7DTOInterface;
 use Nutnet\RKeeper7Api\DTO\Rkeeper7DTO;
 
-class MenuItemRkeeper7DTO extends Rkeeper7DTO implements MenuItemRkeeper7DTOInterface
-{
+class MenuItemRkeeper7DTO extends Rkeeper7DTO implements MenuItemRkeeper7DTOInterface {
 
   /**
    * @var Название блюда
@@ -73,6 +72,21 @@ class MenuItemRkeeper7DTO extends Rkeeper7DTO implements MenuItemRkeeper7DTOInte
    */
   private $diameter = NULL;
 
+  public function __construct($name, $guid, $parent_id, $id, $code, $status, $price, $calories, $proteins, $fats, $carbohydrates, $weight) {
+    $this->name = $name;
+    $this->guid = $guid;
+    $this->parent_id = $parent_id;
+    $this->id = $id;
+    $this->code = $code;
+    $this->status = $status;
+    $this->price = $price;
+    $this->calories = $calories;
+    $this->proteins = $proteins;
+    $this->fats = $fats;
+    $this->carbohydrates = $carbohydrates;
+    $this->weight = $weight;
+
+  }
 
 
   public function getName() {
@@ -136,8 +150,12 @@ class MenuItemRkeeper7DTO extends Rkeeper7DTO implements MenuItemRkeeper7DTOInte
     return $this->diameter;
   }
 
+  public function setDiameter($diameter) {
+    $this->diameter = $diameter;
+  }
+
   public function getPrice() {
-    return $this->price;
+    return $this->price/100;
   }
 
 }
