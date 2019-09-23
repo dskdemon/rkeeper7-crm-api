@@ -115,6 +115,7 @@ class Client
         return $this->httpClient = new Guzzle\Client(
             [
               'base_uri' => $this->options['server'],
+              'verify' => FALSE,
               'auth' => $this->options['http_client_options']['auth']
             ]
         );
