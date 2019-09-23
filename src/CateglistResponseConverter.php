@@ -20,16 +20,17 @@ class CateglistResponseConverter extends ResponseConverter implements ResponseCo
 
   /**
    * @param \GuzzleHttp\Psr7\Response $response
+   * @param bool $as_array
    *
-   * @return mixed|\SimpleXMLElement
+   * @return array|mixed|\Nutnet\RKeeper7Api\Contracts\SimpleXMLElement|\SimpleXMLElement
    * @throws \Nutnet\RKeeper7Api\Exceptions\CantReadResponseException
    */
-  public function convert(Response $response)
+  public function convert(Response $response, $as_array = TRUE)
   {
     $data = [];
 
     //Преобразуем ответ
-    $response_data = parent::convert($response);
+    $response_data = parent::convert($response, $as_array);
 
     if (isset($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'])
         && !$this->is_assoc($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'])) {
