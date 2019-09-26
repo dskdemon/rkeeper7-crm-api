@@ -4,6 +4,8 @@ namespace Nutnet\RKeeper7Api;
 
 use GuzzleHttp\Psr7\Response;
 use Nutnet\RKeeper7Api\Contracts\ResponseConverter as ResponseConverterInterface;
+use Nutnet\RKeeper7Api\Exceptions\SaveOrderResponseError;
+use Nutnet\RKeeper7Api\Exceptions\SaveOrderResponseSchemaError;
 
 class SaveOrderResponseConverter extends ResponseConverter implements ResponseConverterInterface
 {
@@ -12,6 +14,17 @@ class SaveOrderResponseConverter extends ResponseConverter implements ResponseCo
 
     //Преобразуем ответ
     $response_data = parent::convert($response, $as_array);
+
+    if(!isset($response_data['RK7QueryResult']['attributes']['Status'])) {
+    	throw new SaveOrderResponseSchemaError();
+    }
+
+    if ($response_data['RK7QueryResult']['attributes']['Status'] != 'Ok') {
+    	throw new SaveOrderResponseError();
+    }
+
+    $data['order_id'] = $response_data['RK7QueryResult']['Order']['attributes']['orderIdent'];
+    $data['guid'] = $response_data['RK7QueryResult']['Order']['attributes']['guid'];
 
     return $data;
   }
