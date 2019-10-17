@@ -35,20 +35,19 @@ class CateglistResponseConverter extends ResponseConverter implements ResponseCo
     if (isset($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'])
         && !$this->is_assoc($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'])) {
 
-      while(list( , $node) = each($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'])) {
+      foreach ($response_data['RK7QueryResult']['RK7Reference']['Items']['Item']['RIChildItems']['TCategListItem'] as $node) {
+          $data[] = new CategoryRkeeper7DTO(
+              $node['attributes']['Name'],
+              $node['attributes']['GUIDString'],
+              $node['attributes']['Parent'],
+              $node['attributes']['Ident'],
+              $node['attributes']['Code'],
+              $node['attributes']['Status']
+          );
 
-        $data[] = new CategoryRkeeper7DTO(
-          $node['attributes']['Name'],
-          $node['attributes']['GUIDString'],
-          $node['attributes']['Parent'],
-          $node['attributes']['Ident'],
-          $node['attributes']['Code'],
-          $node['attributes']['Status']
-        );
-
-        if (isset($node['RIChildItems'])) {
-          $this->convert_childrens($node['RIChildItems'], $data);
-        }
+          if (isset($node['RIChildItems'])) {
+              $this->convert_childrens($node['RIChildItems'], $data);
+          }
       }
 
     }
@@ -60,20 +59,20 @@ class CateglistResponseConverter extends ResponseConverter implements ResponseCo
   {
 
     if (!$this->is_assoc($RIChildItems['TCategListItem'])) {
-      while(list( , $node) = each($RIChildItems['TCategListItem'])) {
 
-        $data[] = new CategoryRkeeper7DTO(
-          $node['attributes']['Name'],
-          $node['attributes']['GUIDString'],
-          $node['attributes']['Parent'],
-          $node['attributes']['Ident'],
-          $node['attributes']['Code'],
-          $node['attributes']['Status']
-        );
+      foreach ($RIChildItems['TCategListItem'] as $node) {
+          $data[] = new CategoryRkeeper7DTO(
+              $node['attributes']['Name'],
+              $node['attributes']['GUIDString'],
+              $node['attributes']['Parent'],
+              $node['attributes']['Ident'],
+              $node['attributes']['Code'],
+              $node['attributes']['Status']
+          );
 
-        if (isset($node['RIChildItems'])) {
-          $this->convert_childrens($node['RIChildItems'], $data);
-        }
+          if (isset($node['RIChildItems'])) {
+              $this->convert_childrens($node['RIChildItems'], $data);
+          }
       }
     } else {
 

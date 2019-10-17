@@ -21,32 +21,50 @@ class MenuItemsResponseConverter extends ResponseConverter implements ResponseCo
     $items = $xml->xpath('//TRK7MenuItem');
 
     if (!empty($items)) {
-      while (list(, $node) = each($items)) {
-        $item_array = $this->xmlToArray($node);
 
-        $comment = $this->convertComment($item_array['TRK7MenuItem']['attributes']['Comment']);
-        $formula = $this->convertFormula($comment->formulа);
+      foreach ($items as $node) {
+          $item_array = $this->xmlToArray($node);
 
-        $dto = new MenuItemRkeeper7DTO(
-          $item_array['TRK7MenuItem']['attributes']['Name'],
-          $item_array['TRK7MenuItem']['attributes']['GUIDString'],
-          $item_array['TRK7MenuItem']['attributes']['Parent'],
-          $item_array['TRK7MenuItem']['attributes']['Ident'],
-          $item_array['TRK7MenuItem']['attributes']['Code'],
-          $item_array['TRK7MenuItem']['attributes']['Status'],
-          $item_array['TRK7MenuItem']['attributes']['PRICETYPES-3'],
-          $comment->calories,
-          $formula['proteins'],
-          $formula['fats'],
-          $formula['carbohydrates'],
-          $comment->weight
-        );
+          //Значения по умолчанию, если комментарий на заполнен в Rkeeper
+          $calories = $proteins = $fats = $carbohydrates = $weight = '';
 
-        if (!empty($comment->diametr)) {
-          $dto->setDiameter($comment->diametr);
-        }
+          $comment = $this->convertComment($item_array['TRK7MenuItem']['attributes']['Comment']);
 
-        $data[] = $dto;
+          if (isset($comment->calories)) {
+              $calories = $comment->calories;
+          }
+
+          if (isset($comment->formula)) {
+              $formula = $this->convertFormula($comment->formulа);
+              $proteins = $formula['proteins'];
+              $fats = $formula['fats'];
+              $carbohydrates = $formula['carbohydrates'];
+          }
+
+          if (isset($comment->weight)) {
+              $weight = $comment->weight;
+          }
+
+          $dto = new MenuItemRkeeper7DTO(
+              $item_array['TRK7MenuItem']['attributes']['Name'],
+              $item_array['TRK7MenuItem']['attributes']['GUIDString'],
+              $item_array['TRK7MenuItem']['attributes']['Parent'],
+              $item_array['TRK7MenuItem']['attributes']['Ident'],
+              $item_array['TRK7MenuItem']['attributes']['Code'],
+              $item_array['TRK7MenuItem']['attributes']['Status'],
+              $item_array['TRK7MenuItem']['attributes']['PRICETYPES-3'],
+              $calories,
+              $proteins,
+              $fats,
+              $carbohydrates,
+              $weight
+          );
+
+          if (!empty($comment->diametr)) {
+              $dto->setDiameter($comment->diametr);
+          }
+
+          $data[] = $dto;
       }
     }
     return $data;
