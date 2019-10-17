@@ -120,10 +120,14 @@ class MenuItemRkeeper7DTO extends Rkeeper7DTO implements MenuItemRkeeper7DTOInte
     }
 
     if ($this->status == 'rsDeleted') {
-      return 0;
+      return 3;
     }
 
     return 0;
+  }
+
+  public function isDeleted() {
+    return ($this->status == 'rsDeleted') ? true : false;
   }
 
   public function getCalories() {
