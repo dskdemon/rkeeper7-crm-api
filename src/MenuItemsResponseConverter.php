@@ -34,7 +34,7 @@ class MenuItemsResponseConverter extends ResponseConverter implements ResponseCo
               $calories = $comment->calories;
           }
 
-          if (isset($comment->formula)) {
+          if (isset($comment->formulа)) {
               $formula = $this->convertFormula($comment->formulа);
               $proteins = $formula['proteins'];
               $fats = $formula['fats'];
