@@ -28,7 +28,7 @@ class MenuItemsResponseConverter extends ResponseConverter implements ResponseCo
           //Значения по умолчанию, если комментарий на заполнен в Rkeeper
           $calories = $proteins = $fats = $carbohydrates = $weight = '';
 
-          $comment = $this->convertComment($item_array['TRK7MenuItem']['attributes']['Comment']);
+          /*$comment = $this->convertComment($item_array['TRK7MenuItem']['attributes']['Comment']);
 
           if (isset($comment->calories)) {
               $calories = $comment->calories;
@@ -44,6 +44,13 @@ class MenuItemsResponseConverter extends ResponseConverter implements ResponseCo
           if (isset($comment->weight)) {
               $weight = $comment->weight;
           }
+          */
+
+          $calories = "1";
+          $proteins = "1";
+          $fats = "1";
+          $carbohydrates = "1";
+          $weight = "1";
 
           $dto = new MenuItemRkeeper7DTO(
               $item_array['TRK7MenuItem']['attributes']['Name'],
@@ -59,10 +66,6 @@ class MenuItemsResponseConverter extends ResponseConverter implements ResponseCo
               $carbohydrates,
               $weight
           );
-
-          if (!empty($comment->diametr)) {
-              $dto->setDiameter($comment->diametr);
-          }
 
           $data[] = $dto;
       }
