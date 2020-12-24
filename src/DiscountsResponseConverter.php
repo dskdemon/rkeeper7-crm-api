@@ -40,7 +40,7 @@ class DiscountsResponseConverter extends ResponseConverter implements ResponseCo
             $node['Item']['attributes']['Status'],
             $node['Item']['attributes']['OnDish'],
             $node['Item']['attributes']['OnOrder'],
-            $value,
+            $value
         );
     }
 }
